@@ -2,11 +2,11 @@
 
 import {Schema} from 'mongoose';
 
-import addUpIndicesToAttributes from './add.up.indices.to.attributes';
-import addDownIndicesToAttributes from './add.down.indices.to.attributes';
+import addMongoUpIndicesToAttributes from './add.up.indices.to.attributes';
+import addMongoDownIndicesToAttributes from './add.down.indices.to.attributes';
 
-const addUpAndDownIndicesToAttributes = (schema: Schema, attributes: string[]): void => {
-	addUpIndicesToAttributes(schema, attributes);
-	addDownIndicesToAttributes(schema, attributes);
+const addMongoUpAndDownIndicesToAttributes = (schema: Schema, attributes: string[]): void => {
+	addMongoUpIndicesToAttributes(schema, attributes);
+	addMongoDownIndicesToAttributes(schema, attributes);
 };
-export default addUpAndDownIndicesToAttributes;
+export default addMongoUpAndDownIndicesToAttributes;

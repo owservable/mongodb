@@ -1,8 +1,8 @@
 'use strict';
 
 import {Model} from 'mongoose';
-import ObservableModelsMap from '../../src/functions/observable.models.map';
-import ObservableModel from '../../src/functions/observable.model';
+import MongoObservableModelsMap from '../../src/functions/observable.models.map';
+import MongoObservableModel from '../../src/functions/observable.model';
 
 jest.mock('../../src/functions/observable.model');
 
@@ -14,7 +14,7 @@ describe('observable.models.map tests', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		(ObservableModelsMap as any)._instance = undefined;
+		(MongoObservableModelsMap as any)._instance = undefined;
 
 		mockModel1 = {
 			collection: {
@@ -34,7 +34,7 @@ describe('observable.models.map tests', () => {
 			}
 		} as any;
 
-		(ObservableModel as jest.MockedClass<typeof ObservableModel>).mockImplementation((collectionName: string) => {
+		(MongoObservableModel as jest.MockedClass<typeof MongoObservableModel>).mockImplementation((collectionName: string) => {
 			return {
 				collectionName,
 				_collection: collectionName
@@ -43,52 +43,52 @@ describe('observable.models.map tests', () => {
 	});
 
 	describe('init', () => {
-		it('should return an instance of ObservableModelsMap', () => {
-			const instance: ObservableModelsMap = ObservableModelsMap.init();
-			expect(instance).toBeInstanceOf(ObservableModelsMap);
+		it('should return an instance of MongoObservableModelsMap', () => {
+			const instance: MongoObservableModelsMap = MongoObservableModelsMap.init();
+			expect(instance).toBeInstanceOf(MongoObservableModelsMap);
 		});
 
 		it('should return the same instance on multiple calls (singleton)', () => {
-			const instance1: ObservableModelsMap = ObservableModelsMap.init();
-			const instance2: ObservableModelsMap = ObservableModelsMap.init();
+			const instance1: MongoObservableModelsMap = MongoObservableModelsMap.init();
+			const instance2: MongoObservableModelsMap = MongoObservableModelsMap.init();
 			expect(instance1).toBe(instance2);
 		});
 	});
 
 	describe('get', () => {
-		it('should return an ObservableModel instance', () => {
-			const result: ObservableModel = ObservableModelsMap.get(mockModel1);
+		it('should return an MongoObservableModel instance', () => {
+			const result: MongoObservableModel = MongoObservableModelsMap.get(mockModel1);
 			expect(result).toBeDefined();
-			expect(ObservableModel).toHaveBeenCalledWith('collection1');
+			expect(MongoObservableModel).toHaveBeenCalledWith('collection1');
 		});
 
-		it('should return the same ObservableModel instance for the same collection name', () => {
-			const result1: ObservableModel = ObservableModelsMap.get(mockModel1);
-			const result2: ObservableModel = ObservableModelsMap.get(mockModel3);
+		it('should return the same MongoObservableModel instance for the same collection name', () => {
+			const result1: MongoObservableModel = MongoObservableModelsMap.get(mockModel1);
+			const result2: MongoObservableModel = MongoObservableModelsMap.get(mockModel3);
 
 			expect(result1).toBe(result2);
-			expect(ObservableModel).toHaveBeenCalledTimes(1);
+			expect(MongoObservableModel).toHaveBeenCalledTimes(1);
 		});
 
-		it('should return different ObservableModel instances for different collection names', () => {
-			const result1: ObservableModel = ObservableModelsMap.get(mockModel1);
-			const result2: ObservableModel = ObservableModelsMap.get(mockModel2);
+		it('should return different MongoObservableModel instances for different collection names', () => {
+			const result1: MongoObservableModel = MongoObservableModelsMap.get(mockModel1);
+			const result2: MongoObservableModel = MongoObservableModelsMap.get(mockModel2);
 
 			expect(result1).not.toBe(result2);
-			expect(ObservableModel).toHaveBeenCalledTimes(2);
-			expect(ObservableModel).toHaveBeenCalledWith('collection1');
-			expect(ObservableModel).toHaveBeenCalledWith('collection2');
+			expect(MongoObservableModel).toHaveBeenCalledTimes(2);
+			expect(MongoObservableModel).toHaveBeenCalledWith('collection1');
+			expect(MongoObservableModel).toHaveBeenCalledWith('collection2');
 		});
 
-		it('should cache ObservableModel instances in the internal map', () => {
-			ObservableModelsMap.get(mockModel1);
-			expect(ObservableModel).toHaveBeenCalledTimes(1);
+		it('should cache MongoObservableModel instances in the internal map', () => {
+			MongoObservableModelsMap.get(mockModel1);
+			expect(MongoObservableModel).toHaveBeenCalledTimes(1);
 
-			ObservableModelsMap.get(mockModel1);
-			expect(ObservableModel).toHaveBeenCalledTimes(1);
+			MongoObservableModelsMap.get(mockModel1);
+			expect(MongoObservableModel).toHaveBeenCalledTimes(1);
 
-			ObservableModelsMap.get(mockModel2);
-			expect(ObservableModel).toHaveBeenCalledTimes(2);
+			MongoObservableModelsMap.get(mockModel2);
+			expect(MongoObservableModel).toHaveBeenCalledTimes(2);
 		});
 	});
 });

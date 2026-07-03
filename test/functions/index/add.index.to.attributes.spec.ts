@@ -1,7 +1,7 @@
 'use strict';
 
 import {Schema} from 'mongoose';
-import addIndexToAttributes from '../../../src/functions/index/add.index.to.attributes';
+import addMongoIndexToAttributes from '../../../src/functions/index/add.index.to.attributes';
 
 describe('add.index.to.attributes tests', () => {
 	let mockSchema: jest.Mocked<Schema>;
@@ -17,15 +17,15 @@ describe('add.index.to.attributes tests', () => {
 	});
 
 	it('should be defined', () => {
-		expect(addIndexToAttributes).toBeDefined();
-		expect(typeof addIndexToAttributes).toBe('function');
+		expect(addMongoIndexToAttributes).toBeDefined();
+		expect(typeof addMongoIndexToAttributes).toBe('function');
 	});
 
 	it('should create ascending index for single attribute', () => {
 		const attributes = ['name'];
 		const index = 1;
 
-		addIndexToAttributes(mockSchema, attributes, index);
+		addMongoIndexToAttributes(mockSchema, attributes, index);
 
 		expect(mockSchema.index).toHaveBeenCalledTimes(1);
 		expect(mockSchema.index).toHaveBeenCalledWith({name: 1});
@@ -35,7 +35,7 @@ describe('add.index.to.attributes tests', () => {
 		const attributes = ['createdAt'];
 		const index = -1;
 
-		addIndexToAttributes(mockSchema, attributes, index);
+		addMongoIndexToAttributes(mockSchema, attributes, index);
 
 		expect(mockSchema.index).toHaveBeenCalledTimes(1);
 		expect(mockSchema.index).toHaveBeenCalledWith({createdAt: -1});
@@ -45,7 +45,7 @@ describe('add.index.to.attributes tests', () => {
 		const attributes = ['name', 'email', 'status'];
 		const index = 1;
 
-		addIndexToAttributes(mockSchema, attributes, index);
+		addMongoIndexToAttributes(mockSchema, attributes, index);
 
 		expect(mockSchema.index).toHaveBeenCalledTimes(3);
 		expect(mockSchema.index).toHaveBeenNthCalledWith(1, {name: 1});
@@ -57,7 +57,7 @@ describe('add.index.to.attributes tests', () => {
 		const attributes = ['user.profile.name', 'settings.theme'];
 		const index = 1;
 
-		addIndexToAttributes(mockSchema, attributes, index);
+		addMongoIndexToAttributes(mockSchema, attributes, index);
 
 		expect(mockSchema.index).toHaveBeenCalledTimes(2);
 		expect(mockSchema.index).toHaveBeenNthCalledWith(1, {
@@ -72,7 +72,7 @@ describe('add.index.to.attributes tests', () => {
 		const attributes: string[] = [];
 		const index = 1;
 
-		addIndexToAttributes(mockSchema, attributes, index);
+		addMongoIndexToAttributes(mockSchema, attributes, index);
 
 		expect(mockSchema.index).not.toHaveBeenCalled();
 	});
@@ -81,8 +81,8 @@ describe('add.index.to.attributes tests', () => {
 		const attributes1 = ['name'];
 		const attributes2 = ['createdAt'];
 
-		addIndexToAttributes(mockSchema, attributes1, 1);
-		addIndexToAttributes(mockSchema, attributes2, -1);
+		addMongoIndexToAttributes(mockSchema, attributes1, 1);
+		addMongoIndexToAttributes(mockSchema, attributes2, -1);
 
 		expect(mockSchema.index).toHaveBeenCalledTimes(2);
 		expect(mockSchema.index).toHaveBeenNthCalledWith(1, {name: 1});

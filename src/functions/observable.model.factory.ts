@@ -2,8 +2,8 @@
 
 import {Model} from 'mongoose';
 
-import ObservableModel from './observable.model';
-import ObservableModelsMap from './observable.models.map';
+import MongoObservableModel from './observable.model';
+import MongoObservableModelsMap from './observable.models.map';
 
-const observableModel = (model: Model<any>): ObservableModel => ObservableModelsMap.get(model);
-export default observableModel;
+const observableMongoModel = (model: Model<any>): MongoObservableModel => MongoObservableModelsMap.get(model);
+export default observableMongoModel;

@@ -41,9 +41,9 @@ jest.mock('mongoose', () => ({
 
 import {Model} from 'mongoose';
 import {Subject} from 'rxjs';
-import ObservableModel from '../../src/functions/observable.model';
-import observableModel from '../../src/functions/observable.model.factory';
-import ObservableModelsMap from '../../src/functions/observable.models.map';
+import MongoObservableModel from '../../src/functions/observable.model';
+import observableMongoModel from '../../src/functions/observable.model.factory';
+import MongoObservableModelsMap from '../../src/functions/observable.models.map';
 
 describe('observable.model.ts tests', () => {
 	beforeEach(() => {
@@ -51,13 +51,13 @@ describe('observable.model.ts tests', () => {
 		mockWatch.mockImplementation(() => buildStream());
 		mockCollection.mockClear();
 		mockCollection.mockReturnValue({watch: mockWatch});
-		(ObservableModelsMap as any)._instance = undefined;
+		(MongoObservableModelsMap as any)._instance = undefined;
 	});
 
-	describe('observableModel function', () => {
+	describe('observableMongoModel function', () => {
 		it('should exist and be a function', () => {
-			expect(observableModel).toBeDefined();
-			expect(typeof observableModel).toBe('function');
+			expect(observableMongoModel).toBeDefined();
+			expect(typeof observableMongoModel).toBe('function');
 		});
 
 		it('should return a Subject instance', () => {
@@ -67,7 +67,7 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			const result: Subject<any> = observableModel(mockModel);
+			const result: Subject<any> = observableMongoModel(mockModel);
 
 			expect(result).toBeDefined();
 			expect(typeof result.next).toBe('function');
@@ -82,8 +82,8 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			const result1: Subject<any> = observableModel(mockModel);
-			const result2: Subject<any> = observableModel(mockModel);
+			const result1: Subject<any> = observableMongoModel(mockModel);
+			const result2: Subject<any> = observableMongoModel(mockModel);
 
 			expect(result1).toBe(result2);
 		});
@@ -101,8 +101,8 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			const result1: Subject<any> = observableModel(mockModel1);
-			const result2: Subject<any> = observableModel(mockModel2);
+			const result1: Subject<any> = observableMongoModel(mockModel1);
+			const result2: Subject<any> = observableMongoModel(mockModel2);
 
 			expect(result1).not.toBe(result2);
 		});
@@ -114,7 +114,7 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			const result: any = observableModel(mockModel);
+			const result: any = observableMongoModel(mockModel);
 
 			expect(result.lifecycle).toBeDefined();
 			expect(typeof result.lifecycle.next).toBe('function');
@@ -129,7 +129,7 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			observableModel(mockModel);
+			observableMongoModel(mockModel);
 
 			expect(mockCollection).toHaveBeenCalledWith('myTestCollection');
 		});
@@ -141,13 +141,13 @@ describe('observable.model.ts tests', () => {
 				}
 			} as any;
 
-			observableModel(mockModel);
+			observableMongoModel(mockModel);
 
 			expect(mockWatch).toHaveBeenCalledWith([], {fullDocument: 'updateLookup'});
 		});
 	});
 
-	describe('ObservableModel ChangeStream handlers', () => {
+	describe('MongoObservableModel ChangeStream handlers', () => {
 		let consoleErrorSpy: jest.SpyInstance;
 		let consoleWarnSpy: jest.SpyInstance;
 		let consoleInfoSpy: jest.SpyInstance;
@@ -165,7 +165,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('forwards change events to subscribers', () => {
-			const m: ObservableModel = new ObservableModel('directColl1');
+			const m: MongoObservableModel = new MongoObservableModel('directColl1');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			const nextSpy: jest.Mock = jest.fn();
 			m.subscribe({next: nextSpy});
@@ -181,7 +181,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('emits lifecycle error when change handler throws', () => {
-			const m: ObservableModel = new ObservableModel('directColl2');
+			const m: MongoObservableModel = new MongoObservableModel('directColl2');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			m.lifecycle.subscribe(lifeSpy);
@@ -203,7 +203,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('handles stream error by notifying lifecycle and reconnecting', () => {
-			const m: ObservableModel = new ObservableModel('directColl3');
+			const m: MongoObservableModel = new MongoObservableModel('directColl3');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			m.lifecycle.subscribe(lifeSpy);
@@ -215,7 +215,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('handles stream close by notifying lifecycle and reconnecting', () => {
-			const m: ObservableModel = new ObservableModel('directColl4');
+			const m: MongoObservableModel = new MongoObservableModel('directColl4');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			m.lifecycle.subscribe(lifeSpy);
@@ -225,7 +225,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('handles stream end by notifying lifecycle and reconnecting', () => {
-			const m: ObservableModel = new ObservableModel('directColl5');
+			const m: MongoObservableModel = new MongoObservableModel('directColl5');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			m.lifecycle.subscribe(lifeSpy);
@@ -240,7 +240,7 @@ describe('observable.model.ts tests', () => {
 				throw new Error('cleanup');
 			});
 			mockWatch.mockReturnValueOnce(failingStream).mockImplementation(() => buildStream());
-			const m: ObservableModel = new ObservableModel('directColl6');
+			const m: MongoObservableModel = new MongoObservableModel('directColl6');
 			failingStream.emit('error', new Error('e'));
 			expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('cleaning up old stream'), expect.any(Error));
 			expect(mockWatch.mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -248,7 +248,7 @@ describe('observable.model.ts tests', () => {
 		});
 
 		it('reconnects when _stream was cleared before reconnect runs', () => {
-			const m: ObservableModel = new ObservableModel('directColl7');
+			const m: MongoObservableModel = new MongoObservableModel('directColl7');
 			const stream: any = mockWatch.mock.results[mockWatch.mock.results.length - 1].value;
 			(m as any)._stream = undefined;
 			stream.emit('error', new Error('gone'));

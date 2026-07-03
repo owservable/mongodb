@@ -2,8 +2,8 @@
 
 import {BackendRegistry} from '@owservable/core';
 
-import processModels from '../../src/functions/process.models';
-import CollectionsModelsMap from '../../src/collections.models.map';
+import processMongoModels from '../../src/functions/process.models';
+import MongoCollectionsModelsMap from '../../src/collections.models.map';
 import MongoBackend from '../../src/mongo.backend';
 
 jest.mock('@owservable/core', () => ({
@@ -24,7 +24,7 @@ describe('process.models.ts tests', () => {
 		mockFs = require('node:fs');
 		mockPath = require('node:path');
 		mockListSubfoldersByName = require('@owservable/folders').listSubfoldersByName;
-		mockAddCollectionToModelMapping = CollectionsModelsMap.addCollectionToModelMapping as jest.MockedFunction<any>;
+		mockAddCollectionToModelMapping = MongoCollectionsModelsMap.addCollectionToModelMapping as jest.MockedFunction<any>;
 
 		mockPath.join.mockImplementation((...args: string[]) => args.join('/'));
 		mockPath.extname.mockImplementation((fileName: string) => {
@@ -49,14 +49,14 @@ describe('process.models.ts tests', () => {
 
 	describe('basic functionality', () => {
 		it('should exist and be a function', () => {
-			expect(processModels).toBeDefined();
-			expect(typeof processModels).toBe('function');
+			expect(processMongoModels).toBeDefined();
+			expect(typeof processMongoModels).toBe('function');
 		});
 
 		it('should call listSubfoldersByName with correct parameters', () => {
 			mockListSubfoldersByName.mockReturnValue([]);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockListSubfoldersByName).toHaveBeenCalledWith('/test/root', 'models');
 		});
@@ -64,7 +64,7 @@ describe('process.models.ts tests', () => {
 		it('should use default folder name "models" when not provided', () => {
 			mockListSubfoldersByName.mockReturnValue([]);
 
-			processModels('/test/root');
+			processMongoModels('/test/root');
 
 			expect(mockListSubfoldersByName).toHaveBeenCalledWith('/test/root', 'models');
 		});
@@ -72,7 +72,7 @@ describe('process.models.ts tests', () => {
 		it('should handle empty folders array', () => {
 			mockListSubfoldersByName.mockReturnValue([]);
 
-			expect(() => processModels('/test/root', 'models')).not.toThrow();
+			expect(() => processMongoModels('/test/root', 'models')).not.toThrow();
 			expect(mockListSubfoldersByName).toHaveBeenCalled();
 		});
 
@@ -80,7 +80,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models1', '/test/models2', '/test/models3']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(3);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models1');
@@ -96,7 +96,7 @@ describe('process.models.ts tests', () => {
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => false} as any);
 
 			try {
-				processModels('/test/root', 'models');
+				processMongoModels('/test/root', 'models');
 			} catch (error) {}
 
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
@@ -109,7 +109,7 @@ describe('process.models.ts tests', () => {
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => false} as any);
 
 			try {
-				processModels('/test/root', 'models');
+				processMongoModels('/test/root', 'models');
 			} catch (error) {}
 
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
@@ -121,7 +121,7 @@ describe('process.models.ts tests', () => {
 			mockFs.readdirSync.mockReturnValue(['readme.md', 'config.json', 'data.txt', 'image.png'] as any);
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => false} as any);
 
-			expect(() => processModels('/test/root', 'models')).not.toThrow();
+			expect(() => processMongoModels('/test/root', 'models')).not.toThrow();
 
 			expect(mockFs.lstatSync).toHaveBeenCalledTimes(4);
 		});
@@ -132,7 +132,7 @@ describe('process.models.ts tests', () => {
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => false} as any);
 
 			try {
-				processModels('/test/root', 'models');
+				processMongoModels('/test/root', 'models');
 			} catch (error) {}
 
 			expect(mockFs.lstatSync).toHaveBeenCalledTimes(4);
@@ -154,7 +154,7 @@ describe('process.models.ts tests', () => {
 
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => true} as any);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(2);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
@@ -178,7 +178,7 @@ describe('process.models.ts tests', () => {
 				return {isDirectory: () => isDir} as any;
 			}) as any);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models/subfolder');
@@ -197,7 +197,7 @@ describe('process.models.ts tests', () => {
 
 			mockFs.lstatSync.mockReturnValue({isDirectory: () => true} as any);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(4);
 		});
@@ -220,7 +220,7 @@ describe('process.models.ts tests', () => {
 				return {isDirectory: () => isDir} as any;
 			}) as any);
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockFs.lstatSync).toHaveBeenCalledTimes(4);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models/folder1');
@@ -233,7 +233,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models', '/test/excluded']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models', 'excluded');
+			processMongoModels('/test/root', 'models', 'excluded');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(1);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
@@ -244,7 +244,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models', '/test/excluded1', '/test/excluded2', '/test/other']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models', ['excluded1', 'excluded2']);
+			processMongoModels('/test/root', 'models', ['excluded1', 'excluded2']);
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(2);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
@@ -257,7 +257,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			expect(() => processModels('/test/root', 'models', undefined)).not.toThrow();
+			expect(() => processMongoModels('/test/root', 'models', undefined)).not.toThrow();
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
 		});
 
@@ -265,7 +265,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			expect(() => processModels('/test/root', 'models', null as any)).not.toThrow();
+			expect(() => processMongoModels('/test/root', 'models', null as any)).not.toThrow();
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
 		});
 
@@ -273,7 +273,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models', []);
+			processMongoModels('/test/root', 'models', []);
 
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models');
 		});
@@ -282,7 +282,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models/user/excluded', '/test/models/admin']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models', 'excluded');
+			processMongoModels('/test/root', 'models', 'excluded');
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(1);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models/admin');
@@ -292,7 +292,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models/user/temp', '/test/models/admin/backup', '/test/models/public/cache', '/test/models/api']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			processModels('/test/root', 'models', ['temp', 'backup', 'cache']);
+			processMongoModels('/test/root', 'models', ['temp', 'backup', 'cache']);
 
 			expect(mockFs.readdirSync).toHaveBeenCalledTimes(1);
 			expect(mockFs.readdirSync).toHaveBeenCalledWith('/test/models/api');
@@ -304,7 +304,7 @@ describe('process.models.ts tests', () => {
 			mockListSubfoldersByName.mockReturnValue(['/test/models']);
 			mockFs.readdirSync.mockReturnValue([] as any);
 
-			expect(() => processModels('/test/root', 'models')).not.toThrow();
+			expect(() => processMongoModels('/test/root', 'models')).not.toThrow();
 		});
 
 		it('should throw error when model default export is missing', () => {
@@ -314,7 +314,7 @@ describe('process.models.ts tests', () => {
 
 			jest.doMock('/test/models/invalid.ts', () => ({}), {virtual: true});
 
-			expect(() => processModels('/test/root', 'models')).toThrow('Model not found in /test/models/invalid.ts');
+			expect(() => processMongoModels('/test/root', 'models')).toThrow('Model not found in /test/models/invalid.ts');
 		});
 
 		it('should map the collection and register a MongoBackend when model default export exists', () => {
@@ -325,7 +325,7 @@ describe('process.models.ts tests', () => {
 			const mockModel: any = {modelName: 'TestModel', collection: {collectionName: 'testmodels'}};
 			jest.doMock('/test/models/valid.ts', () => ({default: mockModel}), {virtual: true});
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockAddCollectionToModelMapping).toHaveBeenCalledWith(mockModel);
 			expect(BackendRegistry.has('testmodels')).toBe(true);
@@ -345,7 +345,7 @@ describe('process.models.ts tests', () => {
 			jest.doMock('/test/models/first.ts', () => ({default: firstModel}), {virtual: true});
 			jest.doMock('/test/models/second.js', () => ({default: secondModel}), {virtual: true});
 
-			processModels('/test/root', 'models');
+			processMongoModels('/test/root', 'models');
 
 			expect(mockAddCollectionToModelMapping).toHaveBeenCalledTimes(2);
 			expect(BackendRegistry.keys().sort()).toEqual(['firsts', 'seconds']);
@@ -370,7 +370,7 @@ describe('process.models.ts tests', () => {
 			}) as any);
 
 			try {
-				processModels('/test/root', 'models');
+				processMongoModels('/test/root', 'models');
 			} catch (error) {}
 
 			expect(mockFs.lstatSync).toHaveBeenCalledWith('/test/models/file1.js');

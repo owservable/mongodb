@@ -1,7 +1,7 @@
 'use strict';
 
-import observableDatabase from '../../src/functions/observable.database.factory';
-import ObservableDatabase from '../../src/functions/observable.database';
+import observableMongoDatabase from '../../src/functions/observable.database.factory';
+import MongoObservableDatabase from '../../src/functions/observable.database';
 
 jest.mock('../../src/functions/observable.database');
 
@@ -17,7 +17,7 @@ describe('observable.database.factory tests', () => {
 			lifecycle: {subscribe: jest.fn()}
 		};
 
-		mockInitSpy = jest.spyOn(ObservableDatabase, 'init');
+		mockInitSpy = jest.spyOn(MongoObservableDatabase, 'init');
 		mockInitSpy.mockReturnValue(mockObservableDatabaseInstance);
 	});
 
@@ -26,41 +26,41 @@ describe('observable.database.factory tests', () => {
 	});
 
 	it('should be a function', () => {
-		expect(typeof observableDatabase).toBe('function');
+		expect(typeof observableMongoDatabase).toBe('function');
 	});
 
-	it('should return an ObservableDatabase instance', () => {
-		const result: ObservableDatabase = observableDatabase();
+	it('should return an MongoObservableDatabase instance', () => {
+		const result: MongoObservableDatabase = observableMongoDatabase();
 		expect(result).toBeDefined();
 		expect(result.subscribe).toBeDefined();
 		expect(result.lifecycle).toBeDefined();
 	});
 
-	it('should delegate to ObservableDatabase.init', () => {
-		observableDatabase();
-		expect(ObservableDatabase.init).toHaveBeenCalledTimes(1);
-		expect(ObservableDatabase.init).toHaveBeenCalledWith();
+	it('should delegate to MongoObservableDatabase.init', () => {
+		observableMongoDatabase();
+		expect(MongoObservableDatabase.init).toHaveBeenCalledTimes(1);
+		expect(MongoObservableDatabase.init).toHaveBeenCalledWith();
 	});
 
-	it('should return the result from ObservableDatabase.init', () => {
-		const result: ObservableDatabase = observableDatabase();
+	it('should return the result from MongoObservableDatabase.init', () => {
+		const result: MongoObservableDatabase = observableMongoDatabase();
 		expect(result).toBe(mockObservableDatabaseInstance);
 	});
 
 	it('should return the same instance on multiple calls (singleton)', () => {
-		const result1: ObservableDatabase = observableDatabase();
-		const result2: ObservableDatabase = observableDatabase();
+		const result1: MongoObservableDatabase = observableMongoDatabase();
+		const result2: MongoObservableDatabase = observableMongoDatabase();
 
 		expect(result1).toBe(result2);
 		expect(result1).toBe(mockObservableDatabaseInstance);
 		expect(result2).toBe(mockObservableDatabaseInstance);
 	});
 
-	it('should call ObservableDatabase.init each time it is invoked', () => {
-		observableDatabase();
-		observableDatabase();
-		observableDatabase();
+	it('should call MongoObservableDatabase.init each time it is invoked', () => {
+		observableMongoDatabase();
+		observableMongoDatabase();
+		observableMongoDatabase();
 
-		expect(ObservableDatabase.init).toHaveBeenCalledTimes(3);
+		expect(MongoObservableDatabase.init).toHaveBeenCalledTimes(3);
 	});
 });

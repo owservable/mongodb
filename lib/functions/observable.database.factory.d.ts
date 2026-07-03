@@ -1,3 +1,3 @@
-import ObservableDatabase from './observable.database';
-declare const observableDatabase: () => ObservableDatabase;
-export default observableDatabase;
+import MongoObservableDatabase from './observable.database';
+declare const observableMongoDatabase: () => MongoObservableDatabase;
+export default observableMongoDatabase;

@@ -1,4 +1,4 @@
 import { Model } from 'mongoose';
-import ObservableModel from './observable.model';
-declare const observableModel: (model: Model<any>) => ObservableModel;
-export default observableModel;
+import MongoObservableModel from './observable.model';
+declare const observableMongoModel: (model: Model<any>) => MongoObservableModel;
+export default observableMongoModel;

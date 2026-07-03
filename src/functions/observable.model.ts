@@ -6,7 +6,7 @@ import {ReplaySubject, Subject} from 'rxjs';
 
 import type {LifecycleEvent} from '@owservable/core';
 
-class ObservableModel extends Subject<any> {
+class MongoObservableModel extends Subject<any> {
 	private readonly _collection: string;
 	private _stream: mongoose.mongo.ChangeStream;
 	public readonly lifecycle: ReplaySubject<LifecycleEvent>;
@@ -30,7 +30,7 @@ class ObservableModel extends Subject<any> {
 				const {ns, documentKey, operationType, updateDescription, fullDocument} = change;
 				this.next({ns, documentKey, operationType, updateDescription, fullDocument});
 			} catch (error) {
-				console.error(`[@owservable] -> ObservableModel[${this._collection}] Error in change event:`, error);
+				console.error(`[@owservable] -> MongoObservableModel[${this._collection}] Error in change event:`, error);
 				this.lifecycle.next({
 					type: 'error',
 					collection: this._collection,
@@ -41,7 +41,7 @@ class ObservableModel extends Subject<any> {
 		});
 
 		this._stream.on('error', (error: any): void => {
-			console.error(`[@owservable] -> ObservableModel[${this._collection}] ChangeStream error event:`, error, ', attempting reconnection...');
+			console.error(`[@owservable] -> MongoObservableModel[${this._collection}] ChangeStream error event:`, error, ', attempting reconnection...');
 			this.lifecycle.next({
 				type: 'error',
 				collection: this._collection,
@@ -52,7 +52,7 @@ class ObservableModel extends Subject<any> {
 		});
 
 		this._stream.on('close', (): void => {
-			console.warn(`[@owservable] -> ObservableModel[${this._collection}] ChangeStream close event: stream has closed, attempting reconnection...`);
+			console.warn(`[@owservable] -> MongoObservableModel[${this._collection}] ChangeStream close event: stream has closed, attempting reconnection...`);
 			this.lifecycle.next({
 				type: 'close',
 				collection: this._collection,
@@ -62,7 +62,7 @@ class ObservableModel extends Subject<any> {
 		});
 
 		this._stream.on('end', (): void => {
-			console.warn(`[@owservable] -> ObservableModel[${this._collection}] ChangeStream end event: stream has ended, attempting reconnection...`);
+			console.warn(`[@owservable] -> MongoObservableModel[${this._collection}] ChangeStream end event: stream has ended, attempting reconnection...`);
 			this.lifecycle.next({
 				type: 'end',
 				collection: this._collection,
@@ -79,16 +79,16 @@ class ObservableModel extends Subject<any> {
 	}
 
 	private _reconnect(): void {
-		console.info(`[@owservable] -> ObservableModel[${this._collection}] Reconnecting ChangeStream...`);
+		console.info(`[@owservable] -> MongoObservableModel[${this._collection}] Reconnecting ChangeStream...`);
 		try {
 			if (this._stream) {
 				this._stream.removeAllListeners();
 			}
 		} catch (error) {
-			console.error(`[@owservable] -> ObservableModel[${this._collection}] Error cleaning up old stream:`, error);
+			console.error(`[@owservable] -> MongoObservableModel[${this._collection}] Error cleaning up old stream:`, error);
 		}
 
 		this._initializeStream();
 	}
 }
-export default ObservableModel;
+export default MongoObservableModel;

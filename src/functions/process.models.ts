@@ -9,13 +9,13 @@ import {listSubfoldersByName, type ItemStat} from '@owservable/folders';
 import {BackendRegistry} from '@owservable/core';
 
 import MongoBackend from '../mongo.backend';
-import CollectionsModelsMap from '../collections.models.map';
+import MongoCollectionsModelsMap from '../collections.models.map';
 
 const _processFile = (folder: string, file: string): void => {
 	const fullPath: string = path.join(folder, file);
 	const model: any = require(fullPath).default;
 	if (!model) throw new Error(`Model not found in ${folder}/${file}`);
-	CollectionsModelsMap.addCollectionToModelMapping(model);
+	MongoCollectionsModelsMap.addCollectionToModelMapping(model);
 	BackendRegistry.register(model.collection.collectionName, new MongoBackend(model));
 };
 
@@ -26,7 +26,7 @@ const _isExcluded = (folder: string, exclude: string | string[]): boolean => {
 		: !!find(exclude, (e: string) => endsWith(folder, e));
 };
 
-const _processModels = (folder: string, exclude?: string | string[]): void => {
+const _processMongoModels = (folder: string, exclude?: string | string[]): void => {
 	if (_isExcluded(folder, exclude)) return;
 
 	const subfolderNames: string[] = fs.readdirSync(folder);
@@ -54,12 +54,12 @@ const _processModels = (folder: string, exclude?: string | string[]): void => {
 	});
 
 	// Process subfolders recursively using native forEach
-	folders.forEach((subFolder: ItemStat): void => _processModels(subFolder.fullPath, exclude));
+	folders.forEach((subFolder: ItemStat): void => _processMongoModels(subFolder.fullPath, exclude));
 };
 
-const processModels = (root: string, name: string = 'models', exclude?: string | string[]): void => {
+const processMongoModels = (root: string, name: string = 'models', exclude?: string | string[]): void => {
 	const folders: string[] = listSubfoldersByName(root, name);
-	folders.forEach((folder: string): void => _processModels(folder, exclude));
+	folders.forEach((folder: string): void => _processMongoModels(folder, exclude));
 };
 
-export default processModels;
+export default processMongoModels;

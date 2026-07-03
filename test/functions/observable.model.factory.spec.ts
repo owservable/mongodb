@@ -1,9 +1,9 @@
 'use strict';
 
 import {Model} from 'mongoose';
-import observableModel from '../../src/functions/observable.model.factory';
-import ObservableModel from '../../src/functions/observable.model';
-import ObservableModelsMap from '../../src/functions/observable.models.map';
+import observableMongoModel from '../../src/functions/observable.model.factory';
+import MongoObservableModel from '../../src/functions/observable.model';
+import MongoObservableModelsMap from '../../src/functions/observable.models.map';
 
 jest.mock('../../src/functions/observable.models.map');
 
@@ -32,7 +32,7 @@ describe('observable.model.factory tests', () => {
 		mockObservableModel1 = {subscribe: jest.fn(), lifecycle: {subscribe: jest.fn()}} as any;
 		mockObservableModel2 = {subscribe: jest.fn(), lifecycle: {subscribe: jest.fn()}} as any;
 
-		mockGetSpy = jest.spyOn(ObservableModelsMap, 'get');
+		mockGetSpy = jest.spyOn(MongoObservableModelsMap, 'get');
 		mockGetSpy.mockImplementation((model: Model<any>) => {
 			if (model.collection.collectionName === 'testCollection1') {
 				return mockObservableModel1;
@@ -46,44 +46,44 @@ describe('observable.model.factory tests', () => {
 	});
 
 	it('should be a function', () => {
-		expect(typeof observableModel).toBe('function');
+		expect(typeof observableMongoModel).toBe('function');
 	});
 
-	it('should return an ObservableModel', () => {
-		const result: ObservableModel = observableModel(mockModel1);
+	it('should return an MongoObservableModel', () => {
+		const result: MongoObservableModel = observableMongoModel(mockModel1);
 		expect(result).toBeDefined();
 		expect(result.subscribe).toBeDefined();
 		expect(result.lifecycle).toBeDefined();
 	});
 
-	it('should delegate to ObservableModelsMap.get with the correct model', () => {
-		observableModel(mockModel1);
-		expect(ObservableModelsMap.get).toHaveBeenCalledWith(mockModel1);
-		expect(ObservableModelsMap.get).toHaveBeenCalledTimes(1);
+	it('should delegate to MongoObservableModelsMap.get with the correct model', () => {
+		observableMongoModel(mockModel1);
+		expect(MongoObservableModelsMap.get).toHaveBeenCalledWith(mockModel1);
+		expect(MongoObservableModelsMap.get).toHaveBeenCalledTimes(1);
 	});
 
-	it('should return the result from ObservableModelsMap.get', () => {
-		const result: ObservableModel = observableModel(mockModel1);
+	it('should return the result from MongoObservableModelsMap.get', () => {
+		const result: MongoObservableModel = observableMongoModel(mockModel1);
 		expect(result).toBe(mockObservableModel1);
 	});
 
 	it('should return different results for different models', () => {
-		const result1: ObservableModel = observableModel(mockModel1);
-		const result2: ObservableModel = observableModel(mockModel2);
+		const result1: MongoObservableModel = observableMongoModel(mockModel1);
+		const result2: MongoObservableModel = observableMongoModel(mockModel2);
 
 		expect(result1).toBe(mockObservableModel1);
 		expect(result2).toBe(mockObservableModel2);
 		expect(result1).not.toBe(result2);
 	});
 
-	it('should call ObservableModelsMap.get each time it is invoked', () => {
-		observableModel(mockModel1);
-		observableModel(mockModel1);
-		observableModel(mockModel2);
+	it('should call MongoObservableModelsMap.get each time it is invoked', () => {
+		observableMongoModel(mockModel1);
+		observableMongoModel(mockModel1);
+		observableMongoModel(mockModel2);
 
-		expect(ObservableModelsMap.get).toHaveBeenCalledTimes(3);
-		expect(ObservableModelsMap.get).toHaveBeenNthCalledWith(1, mockModel1);
-		expect(ObservableModelsMap.get).toHaveBeenNthCalledWith(2, mockModel1);
-		expect(ObservableModelsMap.get).toHaveBeenNthCalledWith(3, mockModel2);
+		expect(MongoObservableModelsMap.get).toHaveBeenCalledTimes(3);
+		expect(MongoObservableModelsMap.get).toHaveBeenNthCalledWith(1, mockModel1);
+		expect(MongoObservableModelsMap.get).toHaveBeenNthCalledWith(2, mockModel1);
+		expect(MongoObservableModelsMap.get).toHaveBeenNthCalledWith(3, mockModel2);
 	});
 });

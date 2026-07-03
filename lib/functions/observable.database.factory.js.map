@@ -1,1 +1,1 @@
-{"version":3,"file":"observable.database.factory.js","sourceRoot":"","sources":["../../src/functions/observable.database.factory.ts"],"names":[],"mappings":"AAAA,YAAY,CAAC;;;;;AAEb,gFAAuD;AAEvD,MAAM,kBAAkB,GAAG,GAAuB,EAAE,CAAC,6BAAkB,CAAC,IAAI,EAAE,CAAC;AAC/E,kBAAe,kBAAkB,CAAC"}
+{"version":3,"file":"observable.database.factory.js","sourceRoot":"","sources":["../../src/functions/observable.database.factory.ts"],"names":[],"mappings":"AAAA,YAAY,CAAC;;;;;AAEb,gFAA4D;AAE5D,MAAM,uBAAuB,GAAG,GAA4B,EAAE,CAAC,6BAAuB,CAAC,IAAI,EAAE,CAAC;AAC9F,kBAAe,uBAAuB,CAAC"}

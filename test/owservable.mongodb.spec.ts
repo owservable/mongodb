@@ -7,14 +7,14 @@ jest.mock('@owservable/core', () => ({
 import OwservableMongoDB, {
 	MongoBackend,
 	MongoDBConnector,
-	CollectionsModelsMap,
-	processModels,
-	observableModel,
-	observableDatabase,
-	addIndexToAttributes,
-	addUpIndicesToAttributes,
-	addDownIndicesToAttributes,
-	addUpAndDownIndicesToAttributes
+	MongoCollectionsModelsMap,
+	processMongoModels,
+	observableMongoModel,
+	observableMongoDatabase,
+	addMongoIndexToAttributes,
+	addMongoUpIndicesToAttributes,
+	addMongoDownIndicesToAttributes,
+	addMongoUpAndDownIndicesToAttributes
 } from '../src/owservable.mongodb';
 
 import MongoBackendDirect from '../src/mongo.backend';
@@ -39,44 +39,44 @@ describe('owservable.mongodb tests', () => {
 		expect(MongoDBConnector).toBe(MongoDBConnectorDirect);
 	});
 
-	it('exports CollectionsModelsMap', () => {
-		expect(CollectionsModelsMap).toBeDefined();
-		expect(CollectionsModelsMap).toBe(CollectionsModelsMapDirect);
+	it('exports MongoCollectionsModelsMap', () => {
+		expect(MongoCollectionsModelsMap).toBeDefined();
+		expect(MongoCollectionsModelsMap).toBe(CollectionsModelsMapDirect);
 	});
 
-	it('exports processModels', () => {
-		expect(processModels).toBeDefined();
-		expect(processModels).toBe(processModelsDirect);
+	it('exports processMongoModels', () => {
+		expect(processMongoModels).toBeDefined();
+		expect(processMongoModels).toBe(processModelsDirect);
 	});
 
-	it('exports observableModel', () => {
-		expect(observableModel).toBeDefined();
-		expect(observableModel).toBe(observableModelDirect);
+	it('exports observableMongoModel', () => {
+		expect(observableMongoModel).toBeDefined();
+		expect(observableMongoModel).toBe(observableModelDirect);
 	});
 
-	it('exports observableDatabase', () => {
-		expect(observableDatabase).toBeDefined();
-		expect(observableDatabase).toBe(observableDatabaseDirect);
+	it('exports observableMongoDatabase', () => {
+		expect(observableMongoDatabase).toBeDefined();
+		expect(observableMongoDatabase).toBe(observableDatabaseDirect);
 	});
 
-	it('exports addIndexToAttributes', () => {
-		expect(addIndexToAttributes).toBeDefined();
-		expect(addIndexToAttributes).toBe(addIndexToAttributesDirect);
+	it('exports addMongoIndexToAttributes', () => {
+		expect(addMongoIndexToAttributes).toBeDefined();
+		expect(addMongoIndexToAttributes).toBe(addIndexToAttributesDirect);
 	});
 
-	it('exports addUpIndicesToAttributes', () => {
-		expect(addUpIndicesToAttributes).toBeDefined();
-		expect(addUpIndicesToAttributes).toBe(addUpIndicesToAttributesDirect);
+	it('exports addMongoUpIndicesToAttributes', () => {
+		expect(addMongoUpIndicesToAttributes).toBeDefined();
+		expect(addMongoUpIndicesToAttributes).toBe(addUpIndicesToAttributesDirect);
 	});
 
-	it('exports addDownIndicesToAttributes', () => {
-		expect(addDownIndicesToAttributes).toBeDefined();
-		expect(addDownIndicesToAttributes).toBe(addDownIndicesToAttributesDirect);
+	it('exports addMongoDownIndicesToAttributes', () => {
+		expect(addMongoDownIndicesToAttributes).toBeDefined();
+		expect(addMongoDownIndicesToAttributes).toBe(addDownIndicesToAttributesDirect);
 	});
 
-	it('exports addUpAndDownIndicesToAttributes', () => {
-		expect(addUpAndDownIndicesToAttributes).toBeDefined();
-		expect(addUpAndDownIndicesToAttributes).toBe(addUpAndDownIndicesToAttributesDirect);
+	it('exports addMongoUpAndDownIndicesToAttributes', () => {
+		expect(addMongoUpAndDownIndicesToAttributes).toBeDefined();
+		expect(addMongoUpAndDownIndicesToAttributes).toBe(addUpAndDownIndicesToAttributesDirect);
 	});
 
 	it('exports an empty default object', () => {

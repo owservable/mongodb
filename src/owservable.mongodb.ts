@@ -2,27 +2,27 @@
 
 import MongoBackend from './mongo.backend';
 import MongoDBConnector from './mongodb.connector';
-import CollectionsModelsMap from './collections.models.map';
+import MongoCollectionsModelsMap from './collections.models.map';
 
-import processModels from './functions/process.models';
-import observableModel from './functions/observable.model.factory';
-import observableDatabase from './functions/observable.database.factory';
-import addIndexToAttributes from './functions/index/add.index.to.attributes';
-import addUpIndicesToAttributes from './functions/index/add.up.indices.to.attributes';
-import addDownIndicesToAttributes from './functions/index/add.down.indices.to.attributes';
-import addUpAndDownIndicesToAttributes from './functions/index/add.up.and.down.indices.to.attributes';
+import processMongoModels from './functions/process.models';
+import observableMongoModel from './functions/observable.model.factory';
+import observableMongoDatabase from './functions/observable.database.factory';
+import addMongoIndexToAttributes from './functions/index/add.index.to.attributes';
+import addMongoUpIndicesToAttributes from './functions/index/add.up.indices.to.attributes';
+import addMongoDownIndicesToAttributes from './functions/index/add.down.indices.to.attributes';
+import addMongoUpAndDownIndicesToAttributes from './functions/index/add.up.and.down.indices.to.attributes';
 
 export {
 	MongoBackend,
 	MongoDBConnector,
-	CollectionsModelsMap,
-	processModels,
-	observableModel,
-	observableDatabase,
-	addIndexToAttributes,
-	addUpIndicesToAttributes,
-	addDownIndicesToAttributes,
-	addUpAndDownIndicesToAttributes
+	MongoCollectionsModelsMap,
+	processMongoModels,
+	observableMongoModel,
+	observableMongoDatabase,
+	addMongoIndexToAttributes,
+	addMongoUpIndicesToAttributes,
+	addMongoDownIndicesToAttributes,
+	addMongoUpAndDownIndicesToAttributes
 };
 const OwservableMongoDB = {};
 export default OwservableMongoDB;

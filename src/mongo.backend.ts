@@ -6,7 +6,7 @@ import {Observable} from 'rxjs';
 
 import type {IObservableBackend} from '@owservable/core';
 
-import observableModel from './functions/observable.model.factory';
+import observableMongoModel from './functions/observable.model.factory';
 
 export default class MongoBackend implements IObservableBackend {
 	private readonly _model: Model<any>;
@@ -20,7 +20,7 @@ export default class MongoBackend implements IObservableBackend {
 	}
 
 	public changes(): Observable<any> {
-		return observableModel(this._model);
+		return observableMongoModel(this._model);
 	}
 
 	public async find(query: any, fields: any, paging: any, sort: any, populates: any[]): Promise<any[]> {

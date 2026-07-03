@@ -1,12 +1,12 @@
 'use strict';
 
 import {Schema} from 'mongoose';
-import addDownIndicesToAttributes from '../../../src/functions/index/add.down.indices.to.attributes';
-import addIndexToAttributes from '../../../src/functions/index/add.index.to.attributes';
+import addMongoDownIndicesToAttributes from '../../../src/functions/index/add.down.indices.to.attributes';
+import addMongoIndexToAttributes from '../../../src/functions/index/add.index.to.attributes';
 
 jest.mock('../../../src/functions/index/add.index.to.attributes');
 
-const mockAddIndexToAttributes = addIndexToAttributes as jest.MockedFunction<typeof addIndexToAttributes>;
+const mockAddIndexToAttributes = addMongoIndexToAttributes as jest.MockedFunction<typeof addMongoIndexToAttributes>;
 
 describe('add.down.indices.to.attributes tests', () => {
 	let mockSchema: Schema;
@@ -17,14 +17,14 @@ describe('add.down.indices.to.attributes tests', () => {
 	});
 
 	it('should be defined', () => {
-		expect(addDownIndicesToAttributes).toBeDefined();
-		expect(typeof addDownIndicesToAttributes).toBe('function');
+		expect(addMongoDownIndicesToAttributes).toBeDefined();
+		expect(typeof addMongoDownIndicesToAttributes).toBe('function');
 	});
 
-	it('should call addIndexToAttributes with descending index (-1)', () => {
+	it('should call addMongoIndexToAttributes with descending index (-1)', () => {
 		const attributes = ['name', 'email'];
 
-		addDownIndicesToAttributes(mockSchema, attributes);
+		addMongoDownIndicesToAttributes(mockSchema, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledTimes(1);
 		expect(mockAddIndexToAttributes).toHaveBeenCalledWith(mockSchema, attributes, -1);
@@ -33,7 +33,7 @@ describe('add.down.indices.to.attributes tests', () => {
 	it('should handle single attribute', () => {
 		const attributes = ['createdAt'];
 
-		addDownIndicesToAttributes(mockSchema, attributes);
+		addMongoDownIndicesToAttributes(mockSchema, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledWith(mockSchema, attributes, -1);
 	});
@@ -41,7 +41,7 @@ describe('add.down.indices.to.attributes tests', () => {
 	it('should handle multiple attributes', () => {
 		const attributes = ['name', 'email', 'createdAt', 'status'];
 
-		addDownIndicesToAttributes(mockSchema, attributes);
+		addMongoDownIndicesToAttributes(mockSchema, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledWith(mockSchema, attributes, -1);
 	});
@@ -49,7 +49,7 @@ describe('add.down.indices.to.attributes tests', () => {
 	it('should handle empty attributes array', () => {
 		const attributes: string[] = [];
 
-		addDownIndicesToAttributes(mockSchema, attributes);
+		addMongoDownIndicesToAttributes(mockSchema, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledWith(mockSchema, attributes, -1);
 	});
@@ -57,7 +57,7 @@ describe('add.down.indices.to.attributes tests', () => {
 	it('should handle nested attributes', () => {
 		const attributes = ['user.profile.name', 'settings.theme'];
 
-		addDownIndicesToAttributes(mockSchema, attributes);
+		addMongoDownIndicesToAttributes(mockSchema, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledWith(mockSchema, attributes, -1);
 	});
@@ -67,8 +67,8 @@ describe('add.down.indices.to.attributes tests', () => {
 		const schema2 = {} as Schema;
 		const attributes = ['test'];
 
-		addDownIndicesToAttributes(schema1, attributes);
-		addDownIndicesToAttributes(schema2, attributes);
+		addMongoDownIndicesToAttributes(schema1, attributes);
+		addMongoDownIndicesToAttributes(schema2, attributes);
 
 		expect(mockAddIndexToAttributes).toHaveBeenCalledTimes(2);
 		expect(mockAddIndexToAttributes).toHaveBeenNthCalledWith(1, schema1, attributes, -1);

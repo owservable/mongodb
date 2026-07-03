@@ -2,7 +2,7 @@
 
 import {Schema} from 'mongoose';
 
-import addIndexToAttributes from './add.index.to.attributes';
+import addMongoIndexToAttributes from './add.index.to.attributes';
 
-const addDownIndicesToAttributes = (schema: Schema, attributes: string[]): void => addIndexToAttributes(schema, attributes, -1);
-export default addDownIndicesToAttributes;
+const addMongoDownIndicesToAttributes = (schema: Schema, attributes: string[]): void => addMongoIndexToAttributes(schema, attributes, -1);
+export default addMongoDownIndicesToAttributes;

@@ -1,6 +1,6 @@
 'use strict';
 
-import ObservableDatabase from './observable.database';
+import MongoObservableDatabase from './observable.database';
 
-const observableDatabase = (): ObservableDatabase => ObservableDatabase.init();
-export default observableDatabase;
+const observableMongoDatabase = (): MongoObservableDatabase => MongoObservableDatabase.init();
+export default observableMongoDatabase;

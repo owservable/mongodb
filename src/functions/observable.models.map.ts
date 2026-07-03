@@ -2,30 +2,30 @@
 
 import {Model} from 'mongoose';
 
-import ObservableModel from './observable.model';
+import MongoObservableModel from './observable.model';
 
-class ObservableModelsMap {
-	private static _instance: ObservableModelsMap;
+class MongoObservableModelsMap {
+	private static _instance: MongoObservableModelsMap;
 
-	public static init(): ObservableModelsMap {
-		if (!ObservableModelsMap._instance) ObservableModelsMap._instance = new ObservableModelsMap();
-		return ObservableModelsMap._instance;
+	public static init(): MongoObservableModelsMap {
+		if (!MongoObservableModelsMap._instance) MongoObservableModelsMap._instance = new MongoObservableModelsMap();
+		return MongoObservableModelsMap._instance;
 	}
 
-	public static get(model: Model<any>): ObservableModel {
-		const instance: ObservableModelsMap = ObservableModelsMap.init();
-		const map: Map<string, ObservableModel> = instance._map;
+	public static get(model: Model<any>): MongoObservableModel {
+		const instance: MongoObservableModelsMap = MongoObservableModelsMap.init();
+		const map: Map<string, MongoObservableModel> = instance._map;
 
 		const collectionName: string = model.collection.collectionName;
-		if (!map.get(collectionName)) map.set(collectionName, new ObservableModel(collectionName));
+		if (!map.get(collectionName)) map.set(collectionName, new MongoObservableModel(collectionName));
 
 		return map.get(collectionName);
 	}
 
-	private readonly _map: Map<string, ObservableModel>;
+	private readonly _map: Map<string, MongoObservableModel>;
 
 	private constructor() {
-		this._map = new Map<string, ObservableModel>();
+		this._map = new Map<string, MongoObservableModel>();
 	}
 }
-export default ObservableModelsMap;
+export default MongoObservableModelsMap;

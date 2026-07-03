@@ -2,7 +2,7 @@
 
 import {Schema} from 'mongoose';
 
-const addIndexToAttributes = (schema: Schema, attributes: string[], index: 1 | -1): void => {
+const addMongoIndexToAttributes = (schema: Schema, attributes: string[], index: 1 | -1): void => {
 	attributes.forEach((attribute: string): void => {
 		const ind: any = {};
 		ind[attribute] = index;
@@ -10,4 +10,4 @@ const addIndexToAttributes = (schema: Schema, attributes: string[], index: 1 | -
 	});
 };
 
-export default addIndexToAttributes;
+export default addMongoIndexToAttributes;

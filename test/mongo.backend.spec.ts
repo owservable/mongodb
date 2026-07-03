@@ -1,11 +1,11 @@
 'use strict';
 
 import MongoBackend from '../src/mongo.backend';
-import observableModel from '../src/functions/observable.model.factory';
+import observableMongoModel from '../src/functions/observable.model.factory';
 
 jest.mock('../src/functions/observable.model.factory');
 
-const mockObservableModel = observableModel as jest.MockedFunction<typeof observableModel>;
+const mockObservableModel = observableMongoModel as jest.MockedFunction<typeof observableMongoModel>;
 
 describe('mongo.backend tests', () => {
 	let mockModel: any;
@@ -37,7 +37,7 @@ describe('mongo.backend tests', () => {
 	});
 
 	describe('changes', () => {
-		it('should delegate to the observableModel factory', () => {
+		it('should delegate to the observableMongoModel factory', () => {
 			const subject: any = {subscribe: jest.fn()};
 			mockObservableModel.mockReturnValue(subject);
 

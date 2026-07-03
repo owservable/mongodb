@@ -5,14 +5,14 @@ import mongoose from 'mongoose';
 
 import type {LifecycleEvent} from '@owservable/core';
 
-class ObservableDatabase extends Subject<any> {
+class MongoObservableDatabase extends Subject<any> {
 	private _stream: mongoose.mongo.ChangeStream;
-	private static _instance: ObservableDatabase;
+	private static _instance: MongoObservableDatabase;
 	public readonly lifecycle: ReplaySubject<LifecycleEvent>;
 
-	public static init(): ObservableDatabase {
-		if (!ObservableDatabase._instance) ObservableDatabase._instance = new ObservableDatabase();
-		return ObservableDatabase._instance;
+	public static init(): MongoObservableDatabase {
+		if (!MongoObservableDatabase._instance) MongoObservableDatabase._instance = new MongoObservableDatabase();
+		return MongoObservableDatabase._instance;
 	}
 
 	constructor() {
@@ -32,7 +32,7 @@ class ObservableDatabase extends Subject<any> {
 				const {ns, documentKey, operationType, updateDescription, fullDocument} = change;
 				this.next({ns, documentKey, operationType, updateDescription, fullDocument});
 			} catch (error) {
-				console.error('[@owservable] -> ObservableDatabase Error in change event:', error);
+				console.error('[@owservable] -> MongoObservableDatabase Error in change event:', error);
 				this.lifecycle.next({
 					type: 'error',
 					collection: '*',
@@ -43,7 +43,7 @@ class ObservableDatabase extends Subject<any> {
 		});
 
 		this._stream.on('error', (error: any): void => {
-			console.error('[@owservable] -> ObservableDatabase ChangeStream error event:', error, ', attempting reconnection...');
+			console.error('[@owservable] -> MongoObservableDatabase ChangeStream error event:', error, ', attempting reconnection...');
 			this.lifecycle.next({
 				type: 'error',
 				collection: '*',
@@ -54,7 +54,7 @@ class ObservableDatabase extends Subject<any> {
 		});
 
 		this._stream.on('close', (): void => {
-			console.warn('[@owservable] -> ObservableDatabase ChangeStream close event: stream has closed, attempting reconnection...');
+			console.warn('[@owservable] -> MongoObservableDatabase ChangeStream close event: stream has closed, attempting reconnection...');
 			this.lifecycle.next({
 				type: 'close',
 				collection: '*',
@@ -64,7 +64,7 @@ class ObservableDatabase extends Subject<any> {
 		});
 
 		this._stream.on('end', (): void => {
-			console.warn('[@owservable] -> ObservableDatabase ChangeStream end event: stream has ended, attempting reconnection...');
+			console.warn('[@owservable] -> MongoObservableDatabase ChangeStream end event: stream has ended, attempting reconnection...');
 			this.lifecycle.next({
 				type: 'end',
 				collection: '*',
@@ -81,16 +81,16 @@ class ObservableDatabase extends Subject<any> {
 	}
 
 	private _reconnect(): void {
-		console.info('[@owservable] -> ObservableDatabase Reconnecting ChangeStream...');
+		console.info('[@owservable] -> MongoObservableDatabase Reconnecting ChangeStream...');
 		try {
 			if (this._stream) {
 				this._stream.removeAllListeners();
 			}
 		} catch (error) {
-			console.error('[@owservable] -> ObservableDatabase Error cleaning up old stream:', error);
+			console.error('[@owservable] -> MongoObservableDatabase Error cleaning up old stream:', error);
 		}
 
 		this._initializeStream();
 	}
 }
-export default ObservableDatabase;
+export default MongoObservableDatabase;

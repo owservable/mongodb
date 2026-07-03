@@ -7,10 +7,10 @@ MongoDB backend adapter for [@owservable/core](https://github.com/owservable/cor
 ## 🚀 Features
 
 - **MongoBackend**: implements `IObservableBackend` over a mongoose model — change feed, queries, populates, virtuals
-- **ObservableModel / ObservableDatabase**: resilient change-stream wrappers with automatic reconnection
-- **processModels**: scans per-module `models/` folders, registers every model with the `BackendRegistry` and `CollectionsModelsMap`
+- **MongoObservableModel / MongoObservableDatabase**: resilient change-stream wrappers with automatic reconnection
+- **processMongoModels**: scans per-module `models/` folders, registers every model with the `BackendRegistry` and `MongoCollectionsModelsMap`
 - **MongoDBConnector**: mongoose connection lifecycle with pooling and logging
-- **Index helpers**: `addUpIndicesToAttributes`, `addDownIndicesToAttributes`, `addUpAndDownIndicesToAttributes`
+- **Index helpers**: `addMongoUpIndicesToAttributes`, `addMongoDownIndicesToAttributes`, `addMongoUpAndDownIndicesToAttributes`
 
 ## 📦 Installation
 
@@ -25,6 +25,24 @@ pnpm add @owservable/core @owservable/mongodb mongoose
 ```
 
 `@owservable/core`, `mongoose` and `rxjs` are peer dependencies.
+
+## 🔁 Migrating from `owservable` 2.x
+
+The public API is database-prefixed in v3. The websocket wire protocol is unchanged — client applications need no changes.
+
+| owservable 2.x | @owservable/mongodb 3.x |
+|---|---|
+| `MongoDBConnector` | `MongoDBConnector` (unchanged) |
+| `CollectionsModelsMap` | `MongoCollectionsModelsMap` |
+| `processModels` | `processMongoModels` |
+| `observableModel` | `observableMongoModel` |
+| `observableDatabase` | `observableMongoDatabase` |
+| `addIndexToAttributes` | `addMongoIndexToAttributes` |
+| `addUpIndicesToAttributes` | `addMongoUpIndicesToAttributes` |
+| `addDownIndicesToAttributes` | `addMongoDownIndicesToAttributes` |
+| `addUpAndDownIndicesToAttributes` | `addMongoUpAndDownIndicesToAttributes` |
+
+Protocol-level pieces (`OwservableClient`, stores, `DataMiddlewareMap`, cronjobs/workers/watchers) moved to [@owservable/core](https://github.com/owservable/core) with their names unchanged.
 
 ## 📄 License
 

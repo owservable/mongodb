@@ -35,43 +35,43 @@ jest.mock('mongoose', () => ({
 	}
 }));
 
-import ObservableDatabase from '../../src/functions/observable.database';
-import observableDatabase from '../../src/functions/observable.database.factory';
+import MongoObservableDatabase from '../../src/functions/observable.database';
+import observableMongoDatabase from '../../src/functions/observable.database.factory';
 
 describe('observable.database.ts tests', () => {
 	beforeEach(() => {
-		(ObservableDatabase as any)._instance = undefined;
+		(MongoObservableDatabase as any)._instance = undefined;
 		mockWatch.mockReset();
 		mockWatch.mockImplementation(() => buildStream());
 	});
 
-	describe('observableDatabase function', () => {
+	describe('observableMongoDatabase function', () => {
 		it('should exist and be a function', () => {
-			expect(observableDatabase).toBeDefined();
-			expect(typeof observableDatabase).toBe('function');
+			expect(observableMongoDatabase).toBeDefined();
+			expect(typeof observableMongoDatabase).toBe('function');
 		});
 
 		it('should return a Subject instance', () => {
-			const result = observableDatabase();
+			const result = observableMongoDatabase();
 			expect(result).toBeDefined();
 			expect(typeof result.next).toBe('function');
 			expect(typeof result.subscribe).toBe('function');
 		});
 
 		it('should return the same instance (singleton pattern)', () => {
-			const instance1 = observableDatabase();
-			const instance2 = observableDatabase();
+			const instance1 = observableMongoDatabase();
+			const instance2 = observableMongoDatabase();
 			expect(instance1).toBe(instance2);
 		});
 
 		it('should call mongoose connection.db.watch on instantiation', () => {
-			observableDatabase();
+			observableMongoDatabase();
 
 			expect(mockWatch).toHaveBeenCalledWith([], {fullDocument: 'updateLookup'});
 		});
 	});
 
-	describe('ObservableDatabase ChangeStream handlers', () => {
+	describe('MongoObservableDatabase ChangeStream handlers', () => {
 		let consoleErrorSpy: jest.SpyInstance;
 		let consoleWarnSpy: jest.SpyInstance;
 		let consoleInfoSpy: jest.SpyInstance;
@@ -89,7 +89,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('forwards change events to subscribers', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			const nextSpy: jest.Mock = jest.fn();
 			db.subscribe({next: nextSpy});
@@ -105,7 +105,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('emits lifecycle error when change handler throws', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			db.lifecycle.subscribe(lifeSpy);
@@ -127,7 +127,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('handles stream error by notifying lifecycle and reconnecting', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			db.lifecycle.subscribe(lifeSpy);
@@ -137,7 +137,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('handles stream close by notifying lifecycle and reconnecting', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			db.lifecycle.subscribe(lifeSpy);
@@ -147,7 +147,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('handles stream end by notifying lifecycle and reconnecting', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			const lifeSpy: jest.Mock = jest.fn();
 			db.lifecycle.subscribe(lifeSpy);
@@ -157,13 +157,13 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('logs when removeAllListeners throws during reconnect', () => {
-			(ObservableDatabase as any)._instance = undefined;
+			(MongoObservableDatabase as any)._instance = undefined;
 			const failingStream: any = buildStream();
 			failingStream.removeAllListeners = jest.fn().mockImplementation((): never => {
 				throw new Error('cleanup');
 			});
 			mockWatch.mockReturnValueOnce(failingStream).mockImplementation(() => buildStream());
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			failingStream.emit('error', new Error('e'));
 			expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('cleaning up old stream'), expect.any(Error));
 			expect(mockWatch.mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -171,7 +171,7 @@ describe('observable.database.ts tests', () => {
 		});
 
 		it('reconnects when _stream was cleared before reconnect runs', () => {
-			const db = observableDatabase();
+			const db = observableMongoDatabase();
 			const stream: any = mockWatch.mock.results[0].value;
 			(db as any)._stream = undefined;
 			stream.emit('error', new Error('gone'));
