@@ -2,6 +2,8 @@
 
 # @owservable/mongodb
 
+[📖 API Docs](https://owservable.github.io/mongodb/docs/) · [✅ Coverage](https://owservable.github.io/mongodb/coverage/)
+
 MongoDB backend adapter for [@owservable/core](https://github.com/owservable/core): live data via MongoDB change streams over mongoose models.
 
 ## 🚀 Features
