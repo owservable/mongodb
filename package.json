@@ -1,6 +1,6 @@
 {
 	"name": "@owservable/mongodb",
-	"version": "3.0.2",
+	"version": "3.1.0",
 	"description": "owservable mongodb backend adapter: change streams, models and process models",
 	"engines": {
 		"node": ">=24.12.0"
@@ -40,8 +40,8 @@
 		"preinstall": "npx only-allow pnpm"
 	},
 	"dependencies": {
-		"@owservable/core": "^3.0.0",
-		"@owservable/folders": "^2.2.2",
+		"@owservable/core": "^3.1.0",
+		"@owservable/folders": "^3.1.0",
 		"@types/lodash": "^4.17.24",
 		"@types/node": "^26.1.0",
 		"lodash": "^4.18.1",
@@ -65,7 +65,7 @@
 		"strictr": "^0.5.7",
 		"ts-jest": "^29.4.11",
 		"ts-node": "^10.9.2",
-		"typedoc": "^0.28.19",
+		"typedoc": "^0.28.20",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.62.1"
 	},
