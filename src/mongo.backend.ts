@@ -1,6 +1,6 @@
 'use strict';
 
-import {cloneDeep, isArray, omit} from 'lodash';
+import {cloneDeep, omit} from 'lodash';
 import {Model} from 'mongoose';
 import {Observable} from 'rxjs';
 
@@ -57,7 +57,7 @@ export default class MongoBackend implements IObservableBackend {
 
 	public async populate(document: any, populate: any): Promise<any> {
 		if (!document) return document;
-		if (isArray(document)) return this._model.populate(document, populate);
+		if (Array.isArray(document)) return this._model.populate(document, populate);
 		if (document.populate) return document.populate(populate);
 		return this._model.populate(document, populate);
 	}

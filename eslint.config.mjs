@@ -57,5 +57,11 @@ export default tseslint.config(
 			'no-empty': 'off',
 			'sonarjs/pseudo-random': 'off'
 		}
+	},
+	{
+		files: ['src/functions/process.models.ts', 'test/functions/process.models.spec.ts'],
+		rules: {
+			'@typescript-eslint/no-require-imports': 'off'
+		}
 	}
 );
